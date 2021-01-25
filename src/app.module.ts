@@ -14,7 +14,9 @@ const typeOrmConfig = process.env.DATABASE_URL
       synchronize: false,
       logging: false,
       extra: {
-        ssl: true,
+        ssl: {
+          rejectUnauthorized: false,
+        },
       },
       autoLoadEntities: true,
     }
