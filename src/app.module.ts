@@ -7,9 +7,18 @@ import { WorkoutModule } from './features/workout/workout.module';
 import { ImageModule } from './features/image/image.module';
 import { MulterModule } from '@nestjs/platform-express';
 
-@Module({
-  imports: [
-    TypeOrmModule.forRoot({
+const typeOrmConfig = process.env.DATABASE_URL
+  ? {
+      url: process.env.DATABASE_URL,
+      type: 'postgres',
+      synchronize: false,
+      logging: false,
+      extra: {
+        ssl: true,
+      },
+      autoLoadEntities: true,
+    }
+  : {
       type: 'mysql',
       host: 'localhost',
       port: 3306,
@@ -20,7 +29,13 @@ import { MulterModule } from '@nestjs/platform-express';
       synchronize: true,
       logging: ['query', 'error', 'warn', 'info'],
       logger: 'advanced-console',
-    }),
+    };
+
+@Module({
+  imports: [
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    TypeOrmModule.forRoot(typeOrmConfig),
     MulterModule.register({
       dest: './upload',
     }),
